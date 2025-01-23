@@ -6,6 +6,7 @@
 
 # Ignore bundler config.
 /.bundle
+.rubocop_todo.yml
 
 # Ignore all environment files (except templates).
 /.env*
