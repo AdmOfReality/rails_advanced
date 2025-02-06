@@ -1,2 +1,22 @@
-h1= question.title
-p= question.body
+h1= @question.title
+p= @question.body
+
+- if user_signed_in? && current_user.author_of?(@question)
+  = link_to 'Delete question', @question, data: { turbo_method: :delete }
+
+h2 Answers
+p= render @question.answers
+/   #answers
+/     - @question.answers.each do |answer|
+/       .answer
+/         p = answer.body
+/         - if user_signed_in? && current_user.author_of?(answer)
+/           = link_to 'Delete answer', question_answer_path(@question, answer), data: { turbo_method: :delete }
+/ - else
+/   p No answers yet
+
+- if user_signed_in?
+b= 'Add Answer'
+= render 'answers/form'
+
+

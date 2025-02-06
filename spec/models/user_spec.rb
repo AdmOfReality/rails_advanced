@@ -1,6 +1,50 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  it { should validate_presence_of :email }
-  it { should validate_presence_of :password }
+  let(:users) { create_list(:user, 2) }
+
+  describe 'associations' do
+    it { should have_many(:answers).with_foreign_key('author_id').dependent(:destroy) }
+    it { should have_many(:questions).with_foreign_key('author_id').dependent(:destroy) }
+  end
+
+  describe 'validations' do
+    it { should validate_presence_of :email }
+    it { should validate_presence_of :password }
+  end
+
+  describe 'author_of? questions' do
+    let(:question) { create(:question, author: users.first) }
+    let(:other_question) { create(:question, author: users.last) }
+
+    context 'when user is author' do
+      it 'returns true' do
+        expect(users.first.author_of?(question)).to be true
+      end
+    end
+
+    context 'when user is not author' do
+      it 'returns false' do
+        expect(users.first.author_of?(other_question)).to be false
+      end
+    end
+  end
+
+  describe 'author_of? answer' do
+    let(:question) { create(:question, author: users.first) }
+    let(:answer) { create(:answer, question: question, author: users.first) }
+    let(:other_answer) { create(:answer, question: question, author: users.last) }
+
+    context 'when user is author' do
+      it 'returns true' do
+        expect(users.first.author_of?(answer)).to be true
+      end
+    end
+
+    context 'when user is not author' do
+      it 'returns false' do
+        expect(users.first.author_of?(other_answer)).to be false
+      end
+    end
+  end
 end

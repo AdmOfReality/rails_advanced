@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
   let(:user) { create(:user) }
+  let(:question) { create(:question, author: user) }
 
   describe 'GET #index' do
-    let(:questions) { create_list(:question, 3) }
+    let(:questions) { create_list(:question, 3, author: user) }
 
     before { get :index }
 
@@ -33,6 +33,10 @@ RSpec.describe QuestionsController, type: :controller do
       get :new
     end
 
+    it 'assigns a new Question to @question' do
+      expect(assigns(:question)).to be_a_new(Question)
+    end
+
     it 'renders new view' do
       expect(response).to render_template :new
     end
@@ -42,6 +46,10 @@ RSpec.describe QuestionsController, type: :controller do
     before do
       login(user)
       get :edit, params: { id: question }
+    end
+
+    it 'assigns the requested question to @question' do
+      expect(assigns(:question)).to eq question
     end
 
     it 'renders edit view' do
@@ -117,7 +125,7 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'DELETE #destroy' do
     before { login(user) }
 
-    let!(:question) { create(:question) }
+    let!(:question) { create(:question, author: user) }
 
     it 'delete the question' do
       expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)

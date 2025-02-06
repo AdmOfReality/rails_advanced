@@ -17,12 +17,12 @@ feature 'User can create question', "
 
     scenario 'asks a question' do
       fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'Some text'
+      fill_in 'Body', with: 'Question text'
       click_on 'Ask'
 
       expect(page).to have_content 'Your question successfully created.'
       expect(page).to have_content 'Test question'
-      expect(page).to have_content 'Some text'
+      expect(page).to have_content 'Question text'
     end
 
     scenario 'asks a question with errors' do

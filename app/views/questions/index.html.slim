@@ -1,1 +1,10 @@
 p= link_to 'Ask question', new_question_path
+
+- if @questions.any?
+  ul
+    - @questions.each do |question|
+      li
+        h2= question.title
+        p= question.body
+- else
+  p No questions asked
