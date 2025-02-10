@@ -1,26 +1,33 @@
 class QuestionsController < ApplicationController
+  before_action :authenticate_user!, except: %i[index show]
+  before_action :load_question, only: %i[show update destroy edit]
+
   def index
     @questions = Question.all
   end
 
-  def show; end
+  def show
+    @answer = @question.answers.new
+  end
 
-  def new;  end
+  def new
+    @question = Question.new
+  end
 
   def edit; end
 
   def create
-    @question = Question.new(question_params)
+    @question = current_user.questions.new(question_params)
 
     if @question.save
-      redirect_to @question
+      redirect_to @question, notice: 'Your question successfully created.'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
   def update
-    if question.update(question_params)
+    if @question.update(question_params)
       redirect_to @question
     else
       render :edit
@@ -28,17 +35,19 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    question.destroy
-    redirect_to questions_path
+    if current_user&.author_of?(@question)
+      @question.destroy
+      redirect_to questions_path, notice: 'Your question was successfully deleted.'
+    else
+      redirect_to @question, alert: "You can't change someone else's question."
+    end
   end
 
   private
 
-  def question
-    @question ||= params[:id] ? Question.find(params[:id]) : Question.new
+  def load_question
+    @question = Question.find(params[:id])
   end
-
-  helper_method :question
 
   def question_params
     params.require(:question).permit(:title, :body)
