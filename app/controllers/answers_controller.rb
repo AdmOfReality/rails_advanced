@@ -9,8 +9,6 @@ class AnswersController < ApplicationController
 
     if @answer.save
       redirect_to @question, notice: 'Your answer successfully created.'
-    else
-      render 'questions/show', status: :unprocessable_entity
     end
   end
 

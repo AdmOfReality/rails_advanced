@@ -4,7 +4,6 @@ ruby '3.2.2'
 
 gem 'bootsnap', require: false
 gem 'devise'
-gem 'importmap-rails'
 gem 'jbuilder'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
@@ -37,3 +36,5 @@ group :test do
   gem 'selenium-webdriver'
   gem 'shoulda-matchers'
 end
+
+gem "shakapacker", "~> 8.1"

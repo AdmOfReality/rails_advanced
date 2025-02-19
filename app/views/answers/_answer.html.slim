@@ -3,4 +3,4 @@
   - if current_user&.author_of?(answer)
     p= link_to 'Delete answer',
        question_answer_path(answer.question, answer),
-       data: { turbo_method: :delete }
+       method: :delete
