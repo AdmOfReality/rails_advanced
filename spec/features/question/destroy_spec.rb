@@ -14,7 +14,7 @@ feature 'User can delete own question', "
       visit question_path(question)
     end
 
-    scenario 'Author of question delete own question', js: true do
+    scenario 'Author of question delete own question', :js do
       accept_confirm do
         click_on 'Delete question'
       end

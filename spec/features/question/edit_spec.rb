@@ -8,7 +8,7 @@ feature 'User can edit his question', "
   given!(:users) { create_list(:user, 2) }
   given!(:question) { create(:question, author: users.first) }
 
-  describe 'Authenticated user', js: true do
+  describe 'Authenticated user', :js do
     background do
       sign_in(users.first)
 
@@ -48,7 +48,7 @@ feature 'User can edit his question', "
 
       visit question_path(question)
 
-      expect(page).to_not have_link 'Edit'
+      expect(page).not_to have_link 'Edit'
     end
   end
 

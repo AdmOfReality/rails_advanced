@@ -8,7 +8,7 @@ feature 'User can answer to question', "
   given(:user) { create(:user) }
   given!(:question) { create(:question, author: user) }
 
-  describe 'Authenticated user', js: true do
+  describe 'Authenticated user', :js do
     background do
       sign_in(user)
 
@@ -35,6 +35,6 @@ feature 'User can answer to question', "
   scenario 'Unauthenticated user tries to answers question' do
     visit question_path(question)
 
-     expect(page).not_to have_css('form.new_answer')
+    expect(page).not_to have_css('form.new_answer')
   end
 end

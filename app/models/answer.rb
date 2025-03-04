@@ -5,7 +5,7 @@ class Answer < ApplicationRecord
   validates :body, presence: true
 
   def best_answer
-    Answer.where(question_id: self.question_id).update_all(best: false)
+    Answer.where(question_id: question_id).update_all(best: false)
     update(best: true)
   end
 end

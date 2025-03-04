@@ -37,4 +37,4 @@ group :test do
   gem 'shoulda-matchers'
 end
 
-gem "shakapacker", "~> 8.1"
+gem 'shakapacker', '~> 8.1'

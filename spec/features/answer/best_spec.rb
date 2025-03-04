@@ -6,7 +6,6 @@ feature 'User can choose the best answer', "
   As an author of the question
   I'd like to be able to choose the best answer
 " do
-
   given!(:user) { create(:user) }
   given!(:user2) { create(:user) }
   given!(:user3) { create(:user) }
@@ -22,7 +21,7 @@ feature 'User can choose the best answer', "
     end
   end
 
-  describe 'Authenticated user', js: true do
+  describe 'Authenticated user', :js do
     describe 'as an author of the question' do
       background do
         sign_in(user)
@@ -34,7 +33,7 @@ feature 'User can choose the best answer', "
         within "#answer_#{answers.last.id}" do
           click_on 'Best answer'
 
-          expect(page).to_not have_link 'Best answer'
+          expect(page).not_to have_link 'Best answer'
           expect(page).to have_content 'It is the best answer.'
         end
 
@@ -56,8 +55,8 @@ feature 'User can choose the best answer', "
       end
 
       scenario "chooses best answer within other user's question" do
-        within ".answers" do
-          expect(page).to_not have_link 'Best answer'
+        within '.answers' do
+          expect(page).not_to have_link 'Best answer'
         end
       end
     end

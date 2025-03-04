@@ -9,7 +9,7 @@ feature 'User can delete own answer', "
   given!(:question) { create(:question, author: user) }
   given!(:answers) { create_list(:answer, 2, question: question, author: user) }
 
-  describe 'Authenticated user', js: true do
+  describe 'Authenticated user', :js do
     background do
       sign_in(user)
       visit question_path(question)
