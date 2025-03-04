@@ -1,0 +1,7 @@
+$('.answers strong').remove();
+
+$("#answer_<%= @answer.id %>").append('<strong>It is the best answer.</strong>');
+
+$('.answers').html("<%= j render @question.answers.order(best: :desc) %>");
+
+$("#answer_<%= @answer.id %> .best_answer").hide();

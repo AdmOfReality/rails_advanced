@@ -1,0 +1,9 @@
+$("#answer_<%= @answer.id %>").remove();
+
+$("#flash").append("<div class='flash notice visible'>Answer was successfully deleted.</div>");
+
+setTimeout(() => {
+  $("#flash .flash").first().fadeOut(500, function() {
+    $(this).remove();
+  });
+}, 3000);

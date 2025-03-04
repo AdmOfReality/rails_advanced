@@ -1,23 +1,35 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_question, only: %i[create destroy]
-  before_action :find_answer, only: :destroy
+  before_action :find_question, only: %i[create]
+  before_action :find_answer, only: %i[destroy update best]
 
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = @question.answers.build(answer_params)
     @answer.author = current_user
+    @answer.save
+  end
 
-    if @answer.save
-      redirect_to @question, notice: 'Your answer successfully created.'
+  def update
+    if current_user&.author_of?(@answer)
+      @answer.update(answer_params)
+    else
+      head :forbidden
     end
   end
 
   def destroy
     if current_user&.author_of?(@answer)
       @answer.destroy
-      redirect_to question_path(@answer.question), notice: 'Your answer was successfully deleted.'
     else
-      redirect_to @question, alert: "You can't change someone else's answer."
+      head :forbidden
+    end
+  end
+
+  def best
+    if current_user&.author_of?(@answer.question)
+      @answer.best_answer
+    else
+      head :forbidden
     end
   end
 
@@ -28,7 +40,8 @@ class AnswersController < ApplicationController
   end
 
   def find_answer
-    @answer = @question.answers.find(params[:id])
+    @answer = Answer.find(params[:id])
+    @question = @answer.question
   end
 
   def answer_params

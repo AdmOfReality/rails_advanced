@@ -7,19 +7,22 @@ feature 'User can delete own answer', "
 " do
   given(:user) { create(:user) }
   given!(:question) { create(:question, author: user) }
-  given!(:answer) { create(:answer, question: question, author: user) }
+  given!(:answers) { create_list(:answer, 2, question: question, author: user) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in(user)
       visit question_path(question)
     end
 
     scenario 'Author of answer delete own answer' do
-      click_on 'Delete answer'
+      within "#answer_#{answers.first.id}" do
+        accept_confirm do
+          click_on 'Delete answer'
+        end
+      end
 
-      expect(page).to have_content 'Your answer was successfully deleted.'
-      expect(page).not_to have_content answer.body
+      expect(page).not_to have_content answers.first.body
     end
   end
 
@@ -28,12 +31,12 @@ feature 'User can delete own answer', "
     sign_in(other_user)
     visit question_path(question)
 
-    expect(page).not_to have_link 'Delete question'
+    expect(page).not_to have_link 'Delete answer'
   end
 
   scenario 'Unauthenticated user tries to delete question' do
     visit question_path(question)
 
-    expect(page).not_to have_link 'Delete question'
+    expect(page).not_to have_link 'Delete answer'
   end
 end
