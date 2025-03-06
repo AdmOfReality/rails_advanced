@@ -11,8 +11,10 @@ p= question.body
     local: false,
     class: 'hidden edit-question-form',
     html: { id: "edit-question-#{question.id}" } do |f|
-    = f.label :title
-    = f.text_field :title
-    = f.label :body
-    = f.text_area :body
+    p
+      = f.label :title
+      = f.text_field :title
+    p
+      = f.label :body
+      = f.text_area :body
     = f.submit 'Save'
