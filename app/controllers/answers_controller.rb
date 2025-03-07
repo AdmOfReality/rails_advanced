@@ -27,7 +27,7 @@ class AnswersController < ApplicationController
 
   def best
     if current_user&.author_of?(@answer.question)
-      @answer.best_answer
+      @answer.mark_best_answer!
     else
       head :forbidden
     end
