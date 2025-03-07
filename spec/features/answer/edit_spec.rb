@@ -51,6 +51,16 @@ feature 'User can edit his answer', "
         end
       end
     end
+
+    scenario 'edits his answer with attached files' do
+      within "#answer_#{answer.id}" do
+        click_on 'Edit'
+        attach_file 'File', [Rails.root.join('spec/models/answer_spec.rb').to_s, Rails.root.join('spec/models/question_spec.rb').to_s]
+        click_on 'Save'
+        expect(page).to have_link 'answer_spec.rb'
+        expect(page).to have_link 'question_spec.rb'
+      end
+    end
   end
 
   scenario 'Unauthenticated user can not to edit answer' do

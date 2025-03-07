@@ -144,4 +144,54 @@ RSpec.describe QuestionsController, type: :controller do
       expect(response).to redirect_to questions_path
     end
   end
+
+  describe 'DELETE #purge_attachment' do
+    let!(:question) { create(:question, :with_files, author: user) }
+    let(:attachment) { question.files.first }
+
+    context 'when user is the author of the question' do
+      before { login(user) }
+
+      it 'deletes the attachment' do
+        expect do
+          delete :purge_attachment, params: { id: question, attachment_id: attachment.id }, format: :js
+        end.to change(question.files, :count).by(-1)
+      end
+
+      it 'returns a successful response' do
+        delete :purge_attachment, params: { id: question, attachment_id: attachment.id }, format: :js
+        expect(response).to be_successful
+      end
+    end
+
+    context 'when user is not the author of the question' do
+      let(:other_user) { create(:user) }
+
+      before { login(other_user) }
+
+      it 'does not delete the attachment' do
+        expect do
+          delete :purge_attachment, params: { id: question, attachment_id: attachment.id }, format: :js
+        end.not_to change(question.files, :count)
+      end
+
+      it 'returns a forbidden status' do
+        delete :purge_attachment, params: { id: question, attachment_id: attachment.id }, format: :js
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'when user is not authenticated' do
+      it 'does not delete the attachment' do
+        expect do
+          delete :purge_attachment, params: { id: question, attachment_id: attachment.id }, format: :js
+        end.not_to change(question.files, :count)
+      end
+
+      it 'returns an unauthorized status' do
+        delete :purge_attachment, params: { id: question, attachment_id: attachment.id }, format: :js
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+  end
 end

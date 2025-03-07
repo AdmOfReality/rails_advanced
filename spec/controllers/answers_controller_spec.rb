@@ -157,4 +157,39 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #purge_attachment' do
+    let!(:answer) { create(:answer, :with_files, question: question, author: user) }
+    let(:attachment) { answer.files.first }
+
+    context 'when user is the author of the answer' do
+      it 'deletes the attachment' do
+        expect do
+          delete :purge_attachment, params: { id: answer.id, attachment_id: attachment.id }, format: :js
+        end.to change(answer.files, :count).by(-1)
+      end
+
+      it 'returns a successful response' do
+        delete :purge_attachment, params: { id: answer.id, attachment_id: attachment.id }, format: :js
+        expect(response).to be_successful
+      end
+    end
+
+    context 'when user is not the author of the answer' do
+      let(:other_user) { create(:user) }
+
+      before { login(other_user) }
+
+      it 'does not delete the attachment' do
+        expect do
+          delete :purge_attachment, params: { id: answer.id, attachment_id: attachment.id }, format: :js
+        end.not_to change(answer.files, :count)
+      end
+
+      it 'returns a forbidden status' do
+        delete :purge_attachment, params: { id: answer.id, attachment_id: attachment.id }, format: :js
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
 end

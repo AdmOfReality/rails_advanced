@@ -16,9 +16,8 @@ feature 'User can edit his question', "
     end
 
     scenario 'edits his question' do
-      click_on 'Edit'
-
       within '.question' do
+        click_on 'Edit'
         fill_in 'Title', with: 'Edited title'
         fill_in 'Body', with: 'Edited question'
         click_on 'Save'
@@ -32,9 +31,8 @@ feature 'User can edit his question', "
     end
 
     scenario 'edits his questions with errors' do
-      click_on 'Edit'
-
       within '.question' do
+        click_on 'Edit'
         find_field('Body').set('')
         click_on 'Save'
       end
@@ -49,6 +47,16 @@ feature 'User can edit his question', "
       visit question_path(question)
 
       expect(page).not_to have_link 'Edit'
+    end
+
+    scenario 'edits his question with attached files' do
+      within '.question' do
+        click_on 'Edit'
+        attach_file 'File', [Rails.root.join('spec/models/answer_spec.rb').to_s, Rails.root.join('spec/models/question_spec.rb').to_s]
+        click_on 'Save'
+        expect(page).to have_link 'answer_spec.rb'
+        expect(page).to have_link 'question_spec.rb'
+      end
     end
   end
 

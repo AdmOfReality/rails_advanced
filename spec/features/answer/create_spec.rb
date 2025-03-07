@@ -31,7 +31,7 @@ feature 'User can answer to question', "
       expect(page).to have_content "Body can't be blank"
     end
 
-    scenario 'gives an answer with attached file' do
+    scenario 'gives an answer with attached files' do
       fill_in 'Body', with: 'Answer text'
 
       attach_file 'File', [Rails.root.join('spec/rails_helper.rb').to_s, Rails.root.join('spec/spec_helper.rb').to_s]

@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  before_action :load_question, only: %i[show update destroy edit]
+  before_action :load_question, only: %i[show update destroy edit purge_attachment]
 
   def index
     @questions = Question.all
@@ -36,6 +36,16 @@ class QuestionsController < ApplicationController
       redirect_to questions_path, notice: 'Your question was successfully deleted.'
     else
       redirect_to @question, alert: "You can't change someone else's question."
+    end
+  end
+
+  def purge_attachment
+    @attachment = ActiveStorage::Attachment.find(params[:attachment_id])
+
+    if current_user&.author_of?(@question)
+      @attachment.purge
+    else
+      head :forbidden
     end
   end
 

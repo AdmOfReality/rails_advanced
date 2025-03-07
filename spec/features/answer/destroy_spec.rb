@@ -7,7 +7,7 @@ feature 'User can delete own answer', "
 " do
   given(:user) { create(:user) }
   given!(:question) { create(:question, author: user) }
-  given!(:answers) { create_list(:answer, 2, question: question, author: user) }
+  given!(:answers) { create_list(:answer, 2, :with_files, question: question, author: user) }
 
   describe 'Authenticated user', :js do
     background do
@@ -23,6 +23,32 @@ feature 'User can delete own answer', "
       end
 
       expect(page).not_to have_content answers.first.body
+    end
+
+    scenario 'author delete attached files' do
+      attachment = answers.first.files.first
+
+      within "#attachment_#{attachment.id}" do
+        accept_confirm do
+          click_on 'Delete attach'
+        end
+
+        expect(page).not_to have_css "#attachment_#{attachment.id}"
+      end
+
+      expect(ActiveStorage::Attachment).not_to exist(attachment.id)
+    end
+
+    scenario 'non-author delete attached files' do
+      click_on 'Logout'
+      other_user = create(:user)
+      sign_in(other_user)
+      visit question_path(question)
+      attachment = answers.first.files.first
+
+      within "#attachment_#{attachment.id}" do
+        expect(page).not_to have_link 'Delete attach'
+      end
     end
   end
 
