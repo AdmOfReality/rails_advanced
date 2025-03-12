@@ -7,7 +7,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answer = @question.answers.new
+    @answer = Answer.new
   end
 
   def new
@@ -22,16 +22,12 @@ class QuestionsController < ApplicationController
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
     else
-      render :new, status: :unprocessable_entity
+      render :new
     end
   end
 
   def update
-    if @question.update(question_params)
-      redirect_to @question
-    else
-      render :edit
-    end
+    @question.update(question_params)
   end
 
   def destroy

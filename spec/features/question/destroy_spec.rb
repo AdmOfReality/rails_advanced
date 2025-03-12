@@ -14,8 +14,10 @@ feature 'User can delete own question', "
       visit question_path(question)
     end
 
-    scenario 'Author of question delete own question' do
-      click_on 'Delete question'
+    scenario 'Author of question delete own question', :js do
+      accept_confirm do
+        click_on 'Delete question'
+      end
 
       expect(page).to have_content 'Your question was successfully deleted.'
       expect(page).not_to have_content question.title

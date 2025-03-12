@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   devise_for :users
   resources :questions do
-    resources :answers
+    resources :answers, shallow: true, only: %i[create destroy update] do
+      patch :best, on: :member
+    end
   end
 end

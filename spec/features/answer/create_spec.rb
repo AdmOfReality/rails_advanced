@@ -8,7 +8,7 @@ feature 'User can answer to question', "
   given(:user) { create(:user) }
   given!(:question) { create(:question, author: user) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', :js do
     background do
       sign_in(user)
 
@@ -19,8 +19,10 @@ feature 'User can answer to question', "
       fill_in 'Body', with: 'Answer text'
       click_on 'Answer'
 
-      expect(page).to have_content 'Your answer successfully created.'
-      expect(page).to have_content 'Answer text'
+      expect(current_path).to eq question_path(question)
+      within '.answers' do
+        expect(page).to have_content 'Answer text'
+      end
     end
 
     scenario 'gives an answer with errors' do
@@ -32,8 +34,7 @@ feature 'User can answer to question', "
 
   scenario 'Unauthenticated user tries to answers question' do
     visit question_path(question)
-    click_on 'Answer'
 
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(page).not_to have_css('form.new_answer')
   end
 end
