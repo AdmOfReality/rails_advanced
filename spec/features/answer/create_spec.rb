@@ -16,8 +16,10 @@ feature 'User can answer to question', "
     end
 
     scenario 'gives an answer' do
-      fill_in 'Body', with: 'Answer text'
-      click_on 'Answer'
+      within 'form.new_answer' do
+        fill_in 'Body', with: 'Answer text'
+        click_on 'Answer'
+      end
 
       expect(current_path).to eq question_path(question)
       within '.answers' do
@@ -32,10 +34,12 @@ feature 'User can answer to question', "
     end
 
     scenario 'gives an answer with attached files' do
-      fill_in 'Body', with: 'Answer text'
+      within 'form.new_answer' do
+        fill_in 'Body', with: 'Answer text'
 
-      attach_file 'File', [Rails.root.join('spec/rails_helper.rb').to_s, Rails.root.join('spec/spec_helper.rb').to_s]
-      click_on 'Answer'
+        attach_file 'File', [Rails.root.join('spec/rails_helper.rb').to_s, Rails.root.join('spec/spec_helper.rb').to_s]
+        click_on 'Answer'
+      end
 
       within '.answers' do
         expect(page).to have_link 'rails_helper.rb'
