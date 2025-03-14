@@ -2,6 +2,17 @@
   div id="answer_#{answer.id}"
     = answer.body
 
+    .answer_attach
+      - if answer.files.attached?
+        - answer.files.each do |file|
+          div id="attachment_#{file.id}"
+            p= link_to file.filename.to_s, url_for(file)
+            - if current_user&.author_of?(answer)
+              p= link_to 'Delete attach',
+              purge_attachment_answer_path(answer, attachment_id: file.id),
+              method: :delete, remote: true, data: { confirm: 'Are you sure?' }
+
+
     - if answer.best?
       br
       strong It is the best answer.

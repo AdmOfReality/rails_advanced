@@ -1,6 +1,16 @@
 h1= question.title
 p= question.body
 
+.question_attach
+  - if question.files.attached?
+      - question.files.each do |file|
+        div id="attachment_#{file.id}"
+          p= link_to file.filename.to_s, url_for(file)
+          - if current_user&.author_of?(question)
+            p= link_to 'Delete attach',
+            purge_attachment_question_path(question, attachment_id: file.id),
+            method: :delete, remote: true, data: { confirm: 'Are you sure?' }
+
 - if user_signed_in? && current_user.author_of?(question)
   = link_to 'Delete question', @question, method: :delete, data: { confirm: 'Are you sure?' }
   br
@@ -11,8 +21,13 @@ p= question.body
     local: false,
     class: 'hidden edit-question-form',
     html: { id: "edit-question-#{question.id}" } do |f|
-    = f.label :title
-    = f.text_field :title
-    = f.label :body
-    = f.text_area :body
+    p
+      = f.label :title
+      = f.text_field :title
+    p
+      = f.label :body
+      = f.text_area :body
+    p
+      = f.label :files
+      = f.file_field :files, multiple: true, direct_upload: true
     = f.submit 'Save'

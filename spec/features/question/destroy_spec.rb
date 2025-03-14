@@ -6,7 +6,7 @@ feature 'User can delete own question', "
   I'd like to be able to delete my own question
 " do
   given(:user) { create(:user) }
-  given!(:question) { create(:question, author: user) }
+  given!(:question) { create(:question, :with_files, author: user) }
 
   describe 'Authenticated user' do
     background do
@@ -22,6 +22,32 @@ feature 'User can delete own question', "
       expect(page).to have_content 'Your question was successfully deleted.'
       expect(page).not_to have_content question.title
       expect(page).not_to have_content question.body
+    end
+
+    scenario 'delete attached files', :js do
+      attachment = question.files.first
+
+      within "#attachment_#{attachment.id}" do
+        accept_confirm do
+          click_on 'Delete attach'
+        end
+
+        expect(page).not_to have_css "#attachment_#{attachment.id}"
+      end
+
+      expect(ActiveStorage::Attachment).not_to exist(attachment.id)
+    end
+
+    scenario 'non-author delete attached files' do
+      click_on 'Logout'
+      other_user = create(:user)
+      sign_in(other_user)
+      visit question_path(question)
+      attachment = question.files.first
+
+      within "#attachment_#{attachment.id}" do
+        expect(page).not_to have_link 'Delete attach'
+      end
     end
   end
 

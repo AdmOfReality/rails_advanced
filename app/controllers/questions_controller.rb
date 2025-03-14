@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  before_action :load_question, only: %i[show update destroy edit]
+  before_action :load_question, only: %i[show update destroy edit purge_attachment]
 
   def index
     @questions = Question.all
@@ -39,13 +39,23 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def purge_attachment
+    @attachment = ActiveStorage::Attachment.find(params[:attachment_id])
+
+    if current_user&.author_of?(@question)
+      @attachment.purge
+    else
+      head :forbidden
+    end
+  end
+
   private
 
   def load_question
-    @question = Question.find(params[:id])
+    @question = Question.with_attached_files.find(params[:id])
   end
 
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, files: [])
   end
 end

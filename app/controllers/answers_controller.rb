@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question, only: %i[create]
-  before_action :find_answer, only: %i[destroy update best]
+  before_action :find_answer, only: %i[destroy update best purge_attachment]
 
   def create
     @answer = @question.answers.build(answer_params)
@@ -27,7 +27,17 @@ class AnswersController < ApplicationController
 
   def best
     if current_user&.author_of?(@answer.question)
-      @answer.best_answer
+      @answer.mark_best_answer!
+    else
+      head :forbidden
+    end
+  end
+
+  def purge_attachment
+    @attachment = ActiveStorage::Attachment.find(params[:attachment_id])
+
+    if current_user&.author_of?(@answer)
+      @attachment.purge
     else
       head :forbidden
     end
@@ -40,11 +50,11 @@ class AnswersController < ApplicationController
   end
 
   def find_answer
-    @answer = Answer.find(params[:id])
+    @answer = Answer.with_attached_files.find(params[:id])
     @question = @answer.question
   end
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 end
