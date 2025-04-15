@@ -12,10 +12,9 @@ p= question.body
             method: :delete, remote: true, data: { confirm: 'Are you sure?' }
 
 - if user_signed_in? && current_user.author_of?(question)
-  = link_to 'Delete question', @question, method: :delete, data: { confirm: 'Are you sure?' }
-  br
-  br
-  = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
+  p= link_to 'Delete question', @question, method: :delete, data: { confirm: 'Are you sure?' }
+
+  p= link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
 
   = form_with model: question,
     local: false,
@@ -31,3 +30,20 @@ p= question.body
       = f.label :files
       = f.file_field :files, multiple: true, direct_upload: true
     = f.submit 'Save'
+
+.links_question
+  - if @question.links.any?
+    p Links
+    ul
+      - @question.links.each do |link|
+        div id="question_link_#{link.id}"
+          li= link_to link.name, link.url
+          - if link.gist?
+            .gist-container data-gist-url=link.url
+
+          - if current_user&.author_of?(question)
+                  = link_to 'Delete', destroy_link_question_path(question, link_id: link.id),
+                            method: :delete,
+                            remote: true,
+                            data: { confirm: 'Are you sure?' },
+                            class: 'delete-link'

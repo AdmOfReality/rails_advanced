@@ -9,6 +9,9 @@ window.Rails = Rails;
 import * as ActiveStorage from "@rails/activestorage";
 ActiveStorage.start();
 
-import "../packs/answers"
-import "../packs/flash"
-import "../packs/questions"
+import '@nathanvda/cocoon';
+
+import "../packs/answers";
+import "../packs/questions";
+import "../packs/flash";
+import "../packs/gist";
