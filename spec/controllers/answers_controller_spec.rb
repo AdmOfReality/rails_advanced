@@ -201,9 +201,9 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user) }
 
       it 'deletes the link' do
-        expect {
+        expect do
           delete :destroy_link, params: { id: answer, link_id: link }, format: :js
-        }.to change(answer.links, :count).by(-1)
+        end.to change(answer.links, :count).by(-1)
       end
 
       it 'renders destroy_link template' do
@@ -219,12 +219,13 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'when user is not author' do
       let(:other_user) { create(:user) }
+
       before { login(other_user) }
 
       it 'does not delete the link' do
-        expect {
+        expect do
           delete :destroy_link, params: { id: answer, link_id: link }, format: :js
-        }.not_to change(answer.links, :count)
+        end.not_to change(answer.links, :count)
       end
 
       it 'returns forbidden status' do

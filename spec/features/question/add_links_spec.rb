@@ -5,7 +5,6 @@ feature 'User can add links to question', "
   As an question's author
   I'd like to be able to add links
 " do
-
   given(:user) { create(:user) }
   given(:gist_url) { 'https://gist.github.com/AdmOfReality/7db0869e1e821512c70c38c673c006d0' }
 

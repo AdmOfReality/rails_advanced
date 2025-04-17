@@ -1,0 +1,16 @@
+h2 My Rewards
+
+- if @rewards.any?
+  ul
+    - @rewards.each do |reward|
+      li
+        p
+          strong Question:
+          = link_to reward.question.title, question_path(reward.question)
+        p
+          strong Reward:
+          = reward.title
+        - if reward.image.attached?
+          = image_tag reward.image, width: 100
+- else
+  p You don't have any rewards yet.

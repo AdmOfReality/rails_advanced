@@ -10,7 +10,11 @@ class Answer < ApplicationRecord
   accepts_nested_attributes_for :links, allow_destroy: true, reject_if: :all_blank
 
   def mark_best_answer!
-    Answer.where(question_id: question_id).update_all(best: false)
-    update(best: true)
+    transaction do
+      Answer.where(question_id: question_id).update_all(best: false)
+      update!(best: true)
+
+      question.reward.update!(user: author) if question.reward.present?
+    end
   end
 end

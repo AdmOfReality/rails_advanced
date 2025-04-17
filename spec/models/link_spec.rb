@@ -19,7 +19,7 @@ RSpec.describe Link, type: :model do
       ]
 
       valid_urls.each do |url|
-        link = build(:link, name: "Valid Link", url: url, linkable: question)
+        link = build(:link, name: 'Valid Link', url: url, linkable: question)
         expect(link).to be_valid, "#{url} should be valid"
       end
     end
@@ -34,7 +34,7 @@ RSpec.describe Link, type: :model do
       ]
 
       invalid_urls.each do |url|
-        link = build(:link, name: "Invalid Link", url: url, linkable: question)
+        link = build(:link, name: 'Invalid Link', url: url, linkable: question)
         expect(link).to be_invalid, "#{url} should be invalid"
         expect(link.errors[:url]).to include('must be valid (start with http:// or https://)')
       end

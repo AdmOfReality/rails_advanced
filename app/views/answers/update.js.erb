@@ -3,3 +3,7 @@ $('.answer_errors').html("<%= j render 'shared/errors', resource: @answer %>");
 <% if !@answer.errors.present? %>
   $('.answers').html('<%= j render @question.answers.order(:created_at) %>');
 <% end %>
+
+<% if @answer.persisted? %>
+  window.initGists();
+<% end %>

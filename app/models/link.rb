@@ -1,5 +1,5 @@
 class Link < ApplicationRecord
-  VALID_URL_REGEXP = /\A(http|https):\/\/[^\s]+\z/i
+  VALID_URL_REGEXP = %r{\A(http|https)://[^\s]+\z}i
 
   belongs_to :linkable, polymorphic: true
 
