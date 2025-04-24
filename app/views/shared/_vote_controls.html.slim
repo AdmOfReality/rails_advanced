@@ -1,0 +1,20 @@
+- votable_type = votable.model_name.singular
+- votable_id = votable.id
+
+.vote-controls data-votable-type=votable_type data-votable-id=votable_id
+  = link_to '👍', upvote_votes_path(votable_type: votable_type, votable_id: votable_id),
+      method: :post,
+      remote: true,
+      class: 'upvote'
+
+  span.rating-count id="rating-#{votable_type}-#{votable_id}" = votable.rating
+
+  = link_to '👎', downvote_votes_path(votable_type: votable_type, votable_id: votable_id),
+      method: :post,
+      remote: true,
+      class: 'downvote'
+
+  = link_to '❌', cancel_votes_path(votable_type: votable_type, votable_id: votable_id),
+      method: :delete,
+      remote: true,
+      class: 'cancel-vote'

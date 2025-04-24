@@ -15,3 +15,4 @@ import "../packs/answers";
 import "../packs/questions";
 import "../packs/flash";
 import "../packs/gist";
+import "../packs/votes";
