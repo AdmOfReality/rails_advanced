@@ -2,6 +2,7 @@
   .buttons
     = button_to "Logout", destroy_user_session_path, method: :delete
     = button_to "Home", root_path, method: :get
+    = button_to 'My rewards', rewards_path, method: :get
   p= "Welcome #{current_user.email}"
 - else
   = button_to "Login", new_user_session_path

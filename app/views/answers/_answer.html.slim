@@ -22,6 +22,24 @@
       p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
       = render 'answers/update_form', answer: answer
 
+    .links_answer
+      - if answer.links.any?
+        p Links
+        ul
+          - answer.links.each do |link|
+            div id="answer_link_#{link.id}"
+              li
+                = link_to link.name, link.url, target: '_blank'
+                - if link.gist?
+                  .gist-container data-gist-url=link.url
+
+              - if current_user&.author_of?(answer)
+                = link_to 'Delete', destroy_link_answer_path(answer, link_id: link.id),
+                          method: :delete,
+                          remote: true,
+                          data: { confirm: 'Are you sure?' },
+                          class: 'delete-link'
+
     - if current_user&.author_of?(answer.question) && user_signed_in?
       .best_answer
         - unless answer.best?

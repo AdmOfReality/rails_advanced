@@ -61,6 +61,24 @@ feature 'User can edit his answer', "
         expect(page).to have_link 'question_spec.rb'
       end
     end
+
+    scenario 'edits his question with adding a link' do
+      within "#answer_#{answer.id}" do
+        click_on 'Edit'
+
+        click_on 'Add link'
+
+        within all('.nested-fields').last do
+          fill_in 'Link name', with: 'My gist'
+          fill_in 'Url', with: 'https://gist.github.com/AdmOfReality/7db0869e1e821512c70c38c673c006d0'
+        end
+
+        click_on 'Save'
+
+        expect(page).to have_link 'My gist', href: 'https://gist.github.com/AdmOfReality/7db0869e1e821512c70c38c673c006d0'
+        expect(page).to have_css '.gist-container'
+      end
+    end
   end
 
   scenario 'Unauthenticated user can not to edit answer' do

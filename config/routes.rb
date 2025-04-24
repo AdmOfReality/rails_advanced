@@ -1,12 +1,22 @@
 Rails.application.routes.draw do
+  resources :rewards, only: [:index]
+
   root to: 'questions#index'
 
   devise_for :users
+
   resources :questions do
-    delete :purge_attachment, on: :member
+    member do
+      delete :purge_attachment
+      delete 'question_links/:link_id', to: 'questions#destroy_link', as: :destroy_link
+    end
+
     resources :answers, shallow: true, only: %i[create destroy update] do
-      patch :best, on: :member
-      delete :purge_attachment, on: :member
+      member do
+        patch :best
+        delete :purge_attachment
+        delete 'answer_links/:link_id', to: 'answers#destroy_link', as: :destroy_link
+      end
     end
   end
 end

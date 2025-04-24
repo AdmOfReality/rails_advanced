@@ -192,4 +192,46 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy_link' do
+    let(:answer) { create(:answer, question: question, author: user) }
+    let!(:link) { create(:link, linkable: answer) }
+
+    context 'when user is author' do
+      before { login(user) }
+
+      it 'deletes the link' do
+        expect do
+          delete :destroy_link, params: { id: answer, link_id: link }, format: :js
+        end.to change(answer.links, :count).by(-1)
+      end
+
+      it 'renders destroy_link template' do
+        delete :destroy_link, params: { id: answer, link_id: link }, format: :js
+        expect(response).to render_template :destroy_link
+      end
+
+      it 'returns success status' do
+        delete :destroy_link, params: { id: answer, link_id: link }, format: :js
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context 'when user is not author' do
+      let(:other_user) { create(:user) }
+
+      before { login(other_user) }
+
+      it 'does not delete the link' do
+        expect do
+          delete :destroy_link, params: { id: answer, link_id: link }, format: :js
+        end.not_to change(answer.links, :count)
+      end
+
+      it 'returns forbidden status' do
+        delete :destroy_link, params: { id: answer, link_id: link }, format: :js
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
 end

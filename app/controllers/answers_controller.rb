@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question, only: %i[create]
-  before_action :find_answer, only: %i[destroy update best purge_attachment]
+  before_action :find_answer, only: %i[destroy update best purge_attachment destroy_link]
 
   def create
     @answer = @question.answers.build(answer_params)
@@ -20,6 +20,16 @@ class AnswersController < ApplicationController
   def destroy
     if current_user&.author_of?(@answer)
       @answer.destroy
+    else
+      head :forbidden
+    end
+  end
+
+  def destroy_link
+    @link = @answer.links.find(params[:link_id])
+
+    if current_user&.author_of?(@answer)
+      @link.destroy
     else
       head :forbidden
     end
@@ -55,6 +65,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url, :_destroy, :id])
   end
 end

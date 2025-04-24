@@ -5,4 +5,12 @@
   p
     = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true
+
+  h3 Links:
+  #links
+    = f.fields_for :links, style: 'display: none' do |l|
+      = render 'shared/link_fields', f: l
+    .links
+      = link_to_add_association 'Add link', f, :links, partial: 'shared/link_fields'
+
   p= f.submit 'Answer'

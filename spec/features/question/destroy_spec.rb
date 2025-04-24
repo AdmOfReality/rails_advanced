@@ -35,7 +35,9 @@ feature 'User can delete own question', "
         expect(page).not_to have_css "#attachment_#{attachment.id}"
       end
 
-      expect(ActiveStorage::Attachment).not_to exist(attachment.id)
+      expect do
+        ActiveStorage::Attachment.find(attachment.id)
+      end.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     scenario 'non-author delete attached files' do

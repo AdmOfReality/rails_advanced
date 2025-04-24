@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  before_action :load_question, only: %i[show update destroy edit purge_attachment]
+  before_action :load_question, only: %i[show update destroy edit purge_attachment destroy_link]
 
   def index
     @questions = Question.all
@@ -8,10 +8,13 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
+    @answer.links.new
   end
 
   def new
     @question = Question.new
+    @question.links.new
+    @question.build_reward
   end
 
   def edit; end
@@ -39,6 +42,16 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def destroy_link
+    @link = @question.links.find(params[:link_id])
+
+    if current_user&.author_of?(@question)
+      @link.destroy
+    else
+      head :forbidden
+    end
+  end
+
   def purge_attachment
     @attachment = ActiveStorage::Attachment.find(params[:attachment_id])
 
@@ -56,6 +69,12 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(
+      :title,
+      :body,
+      files: [],
+      links_attributes: [:name, :url, :_destroy, :id],
+      reward_attributes: [:title, :image]
+    )
   end
 end

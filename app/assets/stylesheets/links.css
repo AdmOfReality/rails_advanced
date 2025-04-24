@@ -1,0 +1,26 @@
+.nested-fields {
+  margin: 15px 0;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  position: relative;
+}
+
+.link_to_remove_association {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  color: #ff0000;
+}
+
+.links {
+  margin: 10px 0;
+}
+
+#links .nested-fields {
+  display: none;
+}
+
+#links .nested-fields:not(:first-child) {
+  display: block;
+}
