@@ -2,7 +2,8 @@
   div id="answer_#{answer.id}"
     = answer.body
 
-    = render partial: 'shared/vote_controls', locals: { votable: answer }
+    .votes
+      = render partial: 'shared/vote_controls', locals: { votable: answer }
 
     .answer_attach
       - if answer.files.attached?

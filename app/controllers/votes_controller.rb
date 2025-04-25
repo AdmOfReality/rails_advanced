@@ -27,7 +27,7 @@ class VotesController < ApplicationController
     existing_vote = @votable.vote_by(current_user)
 
     if existing_vote&.value == value
-      render json: { error: "You have already voted this way" }, status: :unprocessable_entity
+      render json: { error: 'You have already voted this way' }, status: :unprocessable_entity
     else
       existing_vote&.destroy
       new_vote = @votable.votes.build(user: current_user, value: value)
@@ -46,18 +46,16 @@ class VotesController < ApplicationController
 
   def find_votable
     klass = params[:votable_type].classify.safe_constantize
-    if klass.present?
-      @votable = klass.find_by(id: params[:votable_id])
-    end
+    @votable = klass.find_by(id: params[:votable_id]) if klass.present?
 
-    unless @votable
-      render json: { error: "Votable not found" }, status: :not_found
-    end
+    return if @votable
+
+    render json: { error: 'Votable not found' }, status: :not_found
   end
 
   def ensure_not_author
-    if current_user.author_of?(@votable)
-      render json: { error: "You cannot vote for your own content" }, status: :forbidden
-    end
+    return unless current_user.author_of?(@votable)
+
+    render json: { error: 'You cannot vote for your own content' }, status: :forbidden
   end
 end
