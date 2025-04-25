@@ -4,58 +4,42 @@ class VotesController < ApplicationController
   before_action :ensure_not_author
 
   def upvote
-    vote(+1)
+    process_vote(+1)
   end
 
   def downvote
-    vote(-1)
+    process_vote(-1)
   end
 
   def cancel
-    vote = @votable.vote_by(current_user)
-
-    if vote&.destroy
-      render_rating
-    else
-      render json: { error: "Vote not found or couldn't be deleted" }, status: :unprocessable_entity
-    end
+    result = @votable.cancel_vote!(current_user)
+    render_result(result)
   end
 
   private
 
-  def vote(value)
-    existing_vote = @votable.vote_by(current_user)
-
-    if existing_vote&.value == value
-      render json: { error: 'You have already voted this way' }, status: :unprocessable_entity
-    else
-      existing_vote&.destroy
-      new_vote = @votable.votes.build(user: current_user, value: value)
-
-      if new_vote.save
-        render_rating
-      else
-        render json: { error: new_vote.errors.full_messages.to_sentence }, status: :unprocessable_entity
-      end
-    end
+  def process_vote(value)
+    result = @votable.vote!(current_user, value)
+    render_result(result)
   end
 
-  def render_rating
-    render json: { rating: @votable.rating }
+  def render_result(result)
+    if result[:error]
+      render json: { error: result[:error] }, status: :unprocessable_entity
+    else
+      render json: { rating: result[:rating] }
+    end
   end
 
   def find_votable
     klass = params[:votable_type].classify.safe_constantize
-    @votable = klass.find_by(id: params[:votable_id]) if klass.present?
-
-    return if @votable
-
-    render json: { error: 'Votable not found' }, status: :not_found
+    @votable = klass&.find_by(id: params[:votable_id])
+    render json: { error: 'Votable not found' }, status: :not_found unless @votable
   end
 
   def ensure_not_author
-    return unless current_user.author_of?(@votable)
-
-    render json: { error: 'You cannot vote for your own content' }, status: :forbidden
+    if current_user.author_of?(@votable)
+      render json: { error: 'You cannot vote for your own content' }, status: :forbidden
+    end
   end
 end
