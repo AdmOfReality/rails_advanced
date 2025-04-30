@@ -12,23 +12,21 @@ class VotesController < ApplicationController
   end
 
   def cancel
-    result = @votable.cancel_vote!(current_user)
-    render_result(result)
+    rating = @votable.cancel_vote!(current_user)
+    render json: { rating: rating }
+  rescue Votable::VoteError => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   private
 
   def process_vote(value)
-    result = @votable.vote!(current_user, value)
-    render_result(result)
-  end
-
-  def render_result(result)
-    if result[:error]
-      render json: { error: result[:error] }, status: :unprocessable_entity
-    else
-      render json: { rating: result[:rating] }
-    end
+    rating = @votable.vote!(current_user, value)
+    render json: { rating: rating }
+  rescue Votable::VoteError => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  rescue StandardError => e
+    render json: { error: e.message }, status: :internal_server_error
   end
 
   def find_votable
@@ -38,8 +36,8 @@ class VotesController < ApplicationController
   end
 
   def ensure_not_author
-    if current_user.author_of?(@votable)
-      render json: { error: 'You cannot vote for your own content' }, status: :forbidden
-    end
+    return unless current_user.author_of?(@votable)
+
+    render json: { error: 'You cannot vote for your own content' }, status: :forbidden
   end
 end

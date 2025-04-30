@@ -36,6 +36,7 @@ feature 'User can delete own answer', "
         expect(page).not_to have_css "#attachment_#{attachment.id}"
       end
 
+      sleep 1
       expect(ActiveStorage::Attachment).not_to exist(attachment.id)
     end
 

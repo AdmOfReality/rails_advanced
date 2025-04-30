@@ -1,6 +1,8 @@
 module Votable
   extend ActiveSupport::Concern
 
+  class VoteError < StandardError; end
+
   included do
     has_many :votes, as: :votable, dependent: :destroy
   end
@@ -16,25 +18,22 @@ module Votable
   def vote!(user, value)
     existing_vote = vote_by(user)
 
-    return { error: 'Already voted this way' } if existing_vote&.value == value
+    raise VoteError, 'Already voted this way' if existing_vote&.value == value
 
     transaction do
       existing_vote&.destroy
       votes.create!(user: user, value: value)
     end
 
-    { rating: rating }
-  rescue => e
-    { error: e.message }
+    rating
   end
 
   def cancel_vote!(user)
     vote = vote_by(user)
 
-    if vote&.destroy
-      { rating: rating }
-    else
-      { error: "Vote not found or couldn't be deleted" }
-    end
+    raise VoteError, 'Vote not found' unless vote
+
+    vote.destroy!
+    rating
   end
 end

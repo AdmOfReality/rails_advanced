@@ -11,7 +11,6 @@ shared_examples_for 'votable' do
       raise "Unknown votable class: #{described_class}"
     end
   end
-
   let(:other_user) { create(:user) }
 
   describe '#vote_by' do
@@ -35,34 +34,44 @@ shared_examples_for 'votable' do
 
   describe '#vote!' do
     it 'creates new vote if none exists' do
-      expect {
+      expect do
         votable.vote!(other_user, 1)
-      }.to change(votable.votes, :count).by(1)
+      end.to change(votable.votes, :count).by(1)
     end
 
     it 'replaces existing vote if different value' do
       votable.votes.create!(user: other_user, value: 1)
-      expect {
+      expect do
         votable.vote!(other_user, -1)
-      }.not_to change(votable.votes, :count)
+      end.not_to change(votable.votes, :count)
       expect(votable.vote_by(other_user).value).to eq(-1)
     end
 
-    it '#vote! returns error if same vote already exists' do
+    it 'raises error if same vote already exists' do
       votable.vote!(other_user, 1)
-      expect {
+      expect do
         votable.vote!(other_user, 1)
-      }.not_to raise_error
+      end.to raise_error(Votable::VoteError, 'Already voted this way')
+    end
+
+    it 'returns rating after successful vote' do
+      expect(votable.vote!(other_user, 1)).to eq(1)
     end
   end
 
   describe '#cancel_vote!' do
     it 'removes vote and returns new rating' do
       votable.votes.create!(user: other_user, value: 1)
-      expect {
+      expect do
+        result = votable.cancel_vote!(other_user)
+        expect(result).to eq(0)
+      end.to change(votable.votes, :count).by(-1)
+    end
+
+    it 'raises error if vote not found' do
+      expect do
         votable.cancel_vote!(other_user)
-      }.to change(votable.votes, :count).by(-1)
-      expect(votable.rating).to eq(0)
+      end.to raise_error(Votable::VoteError, 'Vote not found')
     end
   end
 end
