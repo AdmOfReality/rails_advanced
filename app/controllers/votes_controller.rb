@@ -14,8 +14,12 @@ class VotesController < ApplicationController
   def cancel
     rating = @votable.cancel_vote!(current_user)
     render json: { rating: rating }
+  rescue Votable::VoteNotFoundError => e
+    render json: { error: e.message }, status: :not_found
   rescue Votable::VoteError => e
     render json: { error: e.message }, status: :unprocessable_entity
+  rescue StandardError => e
+    render json: { error: "Unexpected error: #{e.message}" }, status: :internal_server_error
   end
 
   private
@@ -23,10 +27,12 @@ class VotesController < ApplicationController
   def process_vote(value)
     rating = @votable.vote!(current_user, value)
     render json: { rating: rating }
-  rescue Votable::VoteError => e
+  rescue Votable::AlreadyVotedError => e
     render json: { error: e.message }, status: :unprocessable_entity
+  rescue Votable::VoteError => e
+    render json: { error: "Voting error: #{e.message}" }, status: :bad_request
   rescue StandardError => e
-    render json: { error: e.message }, status: :internal_server_error
+    render json: { error: "Unexpected error: #{e.message}" }, status: :internal_server_error
   end
 
   def find_votable

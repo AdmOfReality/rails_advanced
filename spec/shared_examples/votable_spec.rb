@@ -51,7 +51,7 @@ shared_examples_for 'votable' do
       votable.vote!(other_user, 1)
       expect do
         votable.vote!(other_user, 1)
-      end.to raise_error(Votable::VoteError, 'Already voted this way')
+      end.to raise_error(Votable::AlreadyVotedError, 'User already voted with value 1')
     end
 
     it 'returns rating after successful vote' do
@@ -71,7 +71,7 @@ shared_examples_for 'votable' do
     it 'raises error if vote not found' do
       expect do
         votable.cancel_vote!(other_user)
-      end.to raise_error(Votable::VoteError, 'Vote not found')
+      end.to raise_error(Votable::VoteNotFoundError, 'No vote found to cancel')
     end
   end
 end
