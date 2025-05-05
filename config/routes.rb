@@ -19,4 +19,12 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resource :votes, only: [] do
+    collection do
+      post 'upvote'
+      post 'downvote'
+      delete 'cancel'
+    end
+  end
 end

@@ -1,6 +1,9 @@
 h1= question.title
 p= question.body
 
+.votes
+  = render partial: 'shared/vote_controls', locals: { votable: question }
+
 .question_attach
   - if question.files.attached?
       - question.files.each do |file|

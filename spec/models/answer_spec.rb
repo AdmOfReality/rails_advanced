@@ -1,6 +1,9 @@
 require 'rails_helper'
+require 'shared_examples/votable_spec'
 
 RSpec.describe Answer, type: :model do
+  it_behaves_like 'votable'
+
   it { should belong_to :question }
   it { should belong_to(:author).class_name('User') }
   it { should have_many(:links).dependent(:destroy) }

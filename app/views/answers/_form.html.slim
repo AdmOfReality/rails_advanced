@@ -1,4 +1,4 @@
-= form_with model: [@question, answer], local: false, class: 'new_answer' do |f|
+= form_with model: [@question, answer], local: false, class: 'new_answer', data: { type: :json } do |f|
   p
     = f.label :body
     = f.text_area :body
