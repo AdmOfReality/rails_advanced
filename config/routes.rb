@@ -27,4 +27,6 @@ Rails.application.routes.draw do
       delete 'cancel'
     end
   end
+
+  mount ActionCable.server => '/cable'
 end
