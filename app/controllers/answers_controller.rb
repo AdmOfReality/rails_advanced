@@ -6,7 +6,9 @@ class AnswersController < ApplicationController
   def create
     @answer = @question.answers.build(answer_params)
     @answer.author = current_user
-    @answer.save
+    if @answer.save
+      broadcast_answer
+    end
   end
 
   def update
@@ -66,5 +68,16 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url, :_destroy, :id])
+  end
+
+  def broadcast_answer
+    QuestionChannel.broadcast_to(
+      @question,
+      answer: render_to_string(
+        partial: 'answers/answer',
+        formats: [:html],
+        locals: { answer: @answer }
+      )
+    )
   end
 end

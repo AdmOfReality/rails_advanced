@@ -1,3 +1,5 @@
+#question-show[data-question-id=@question.id]
+
 .question
   = render 'questions/question', question: @question
 
@@ -14,5 +16,3 @@ h2 Answers
 - if user_signed_in?
   b= 'Add Answer'
   = render 'answers/form', answer: @answer
-
-
