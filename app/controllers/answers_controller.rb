@@ -7,7 +7,7 @@ class AnswersController < ApplicationController
     @answer = @question.answers.build(answer_params)
     @answer.author = current_user
     if @answer.save
-      broadcast_answer
+      publish_answer
     end
   end
 
@@ -70,7 +70,7 @@ class AnswersController < ApplicationController
     params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url, :_destroy, :id])
   end
 
-  def broadcast_answer
+  def publish_answer
     QuestionChannel.broadcast_to(
       @question,
       answer: render_to_string(

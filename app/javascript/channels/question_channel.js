@@ -11,7 +11,8 @@ $(document).on('DOMContentLoaded ready page:load', function () {
     {
       received(data) {
         if (data.answer) {
-          $('.answers').append(data.answer)
+          $('.answers').append(data.answer);
+          $(document).trigger('comments:subscribe');
         }
       }
     }

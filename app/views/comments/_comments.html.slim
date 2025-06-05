@@ -1,0 +1,7 @@
+- comments.each do |comment|
+  .comment
+    p
+      small.text-muted
+        | [#{comment.created_at.strftime('%H:%M %d.%m.%Y')}]
+        = comment.user.email
+    p = comment.body

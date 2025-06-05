@@ -3,16 +3,21 @@
 .question
   = render 'questions/question', question: @question
 
+  / Комментарии к вопросу
+  .comments[data-commentable-type="Question" data-commentable-id=@question.id]
+    = render partial: 'comments/comments', locals: { comments: @question.comments }
+    = render partial: 'comments/form', locals: { commentable: @question }
+
 .question_errors
   = render 'shared/errors', resource: @question
 
 h2 Answers
 .answers
-  = render @question.answers.order('best DESC')
+  = render partial: 'answers/answer', collection: @question.answers.order('best DESC'), as: :answer
 
 .answer_errors
   = render 'shared/errors', resource: @answer
 
 - if user_signed_in?
-  b= 'Add Answer'
+  b Add Answer
   = render 'answers/form', answer: @answer
