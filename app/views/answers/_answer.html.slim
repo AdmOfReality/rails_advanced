@@ -2,6 +2,11 @@
   div id="answer_#{answer.id}"
     = answer.body
 
+    / Комментарии к ответу
+    .comments[data-commentable-type="Answer" data-commentable-id=answer.id]
+      = render partial: 'comments/comments', locals: { comments: answer.comments }
+      = render partial: 'comments/form', locals: { commentable: answer }
+
     .votes
       = render partial: 'shared/vote_controls', locals: { votable: answer }
 

@@ -1,7 +1,7 @@
 p= link_to 'Ask question', new_question_path
 
 - if @questions.any?
-  ul
+  .questions
     - @questions.each do |q|
       li
         = link_to q.title, q

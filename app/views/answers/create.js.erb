@@ -1,6 +1,5 @@
 $('.answer_errors').html('<%= render 'shared/errors', resource: @answer %>')
 <% if @answer.persisted? %>
-  $('.answers').append('<%= j render @answer%>');
   $('.new_answer #answer_body').val('');
   window.initGists();
 <% end %>
