@@ -17,7 +17,7 @@ class VotesController < ApplicationController
   rescue Votable::VoteNotFoundError => e
     render json: { error: e.message }, status: :not_found
   rescue StandardError => e
-  render json: { error: "Unexpected error: #{e.message}" }, status: :internal_server_error
+    render json: { error: "Unexpected error: #{e.message}" }, status: :internal_server_error
   end
 
   private
