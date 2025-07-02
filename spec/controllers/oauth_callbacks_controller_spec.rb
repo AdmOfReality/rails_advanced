@@ -15,7 +15,7 @@ RSpec.describe OauthCallbacksController, type: :controller do
       get :github
     end
 
-    context 'user exist' do
+    context 'when user exist' do
       let!(:user) { create(:user) }
 
       before do
@@ -32,7 +32,7 @@ RSpec.describe OauthCallbacksController, type: :controller do
       end
     end
 
-    context 'user does not exist' do
+    context 'when user does not exist' do
       before do
         allow(User).to receive(:find_for_oauth)
         get :github
@@ -43,7 +43,7 @@ RSpec.describe OauthCallbacksController, type: :controller do
       end
 
       it 'does not login user' do
-        expect(subject.current_user).not_to be
+        expect(subject.current_user).to be_nil
       end
     end
   end

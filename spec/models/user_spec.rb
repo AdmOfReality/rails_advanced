@@ -7,7 +7,6 @@ RSpec.describe User, type: :model do
     it { should have_many(:answers).with_foreign_key('author_id').dependent(:destroy) }
     it { should have_many(:questions).with_foreign_key('author_id').dependent(:destroy) }
     it { should have_many(:authorizations).dependent(:destroy) }
-
   end
 
   describe 'validations' do
@@ -51,14 +50,18 @@ RSpec.describe User, type: :model do
   end
 
   describe '.find_for_oauth' do
-    let!(:user) { create(:user) }
+    let(:user) { create(:user) }
     let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
-    let(:service) { double('FindForOauth') }
+    let(:service) { instance_double(FindForOauth) }
 
     it 'calls service FindForOauth' do
-      expect(FindForOauth).to receive(:new).with(auth).and_return(service)
-      expect(service).to receive(:call)
-      User.find_for_oauth(auth)
+      allow(FindForOauth).to receive(:new).with(auth).and_return(service)
+      allow(service).to receive(:call)
+
+      described_class.find_for_oauth(auth)
+
+      expect(FindForOauth).to have_received(:new).with(auth)
+      expect(service).to have_received(:call)
     end
   end
 end

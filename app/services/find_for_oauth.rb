@@ -6,19 +6,34 @@ class FindForOauth
   end
 
   def call
-    authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
+    authorization = find_authorization
     return authorization.user if authorization
 
-    email = auth.info[:email]
-    user = User.where(email: email).first
-    if user
-      user.create_authorization(auth)
-    else
-      password = Devise.friendly_token[0, 20]
-      user = User.create!(email: email, password: password, password_confirmation: password)
-      user.create_authorization(auth)
-    end
-
+    email = fetch_email
+    user = find_or_create_user(email)
+    user.create_authorization(auth)
     user
+  end
+
+  private
+
+  def find_authorization
+    Authorization.find_by(provider: auth.provider, uid: auth.uid.to_s)
+  end
+
+  def fetch_email
+    auth.info[:email]
+  end
+
+  def find_or_create_user(email)
+    user = User.find_by(email: email)
+    return user if user
+
+    password = Devise.friendly_token[0, 20]
+    User.create!(
+      email: email,
+      password: password,
+      password_confirmation: password
+    )
   end
 end
