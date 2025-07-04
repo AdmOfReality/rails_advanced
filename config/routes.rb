@@ -3,7 +3,12 @@ Rails.application.routes.draw do
 
   root to: 'questions#index'
 
-  devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks' }
+  devise_for :users, controllers: {
+    omniauth_callbacks: 'oauth_callbacks',
+    confirmations: 'confirmations'
+  }
+
+  resource :oauth_email, only: [:new, :create], controller: 'oauth_emails'
 
   resources :questions do
     resources :comments, only: :create

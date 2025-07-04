@@ -31,11 +31,13 @@ group :development, :test do
 end
 
 group :development do
+  gem 'letter_opener'
   gem 'web-console'
 end
 
 group :test do
   gem 'capybara'
+  gem 'capybara-email'
   gem 'database_cleaner-active_record', '~> 2.0'
   gem 'launchy'
   gem 'rails-controller-testing'

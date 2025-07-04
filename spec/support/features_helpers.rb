@@ -7,4 +7,14 @@ module FeatureHelpers
 
     expect(page).to have_content 'Signed in successfully'
   end
+
+  def oauth_response(options = {})
+    return if options[:provider].blank?
+
+    OmniAuth.config.mock_auth[options[:provider].to_sym] = OmniAuth::AuthHash.new(
+      'provider' => options[:provider].to_s,
+      'uid' => '123',
+      'info' => { 'email' => 'user@example.com' }
+    )
+  end
 end

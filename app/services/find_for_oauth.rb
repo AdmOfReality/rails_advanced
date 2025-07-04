@@ -10,6 +10,9 @@ class FindForOauth
     return authorization.user if authorization
 
     email = fetch_email
+    # return nil unless email
+    return :no_email unless email
+
     user = find_or_create_user(email)
     user.create_authorization(auth)
     user
@@ -30,10 +33,13 @@ class FindForOauth
     return user if user
 
     password = Devise.friendly_token[0, 20]
-    User.create!(
+    user = User.new(
       email: email,
       password: password,
       password_confirmation: password
     )
+    user.skip_confirmation! if user.respond_to?(:skip_confirmation!)
+    user.save!
+    user
   end
 end
