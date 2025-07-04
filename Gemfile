@@ -7,6 +7,9 @@ gem 'bootsnap', require: false
 gem 'cocoon'
 gem 'devise'
 gem 'jbuilder'
+gem 'omniauth'
+gem 'omniauth-facebook'
+gem 'omniauth-github'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
 gem 'rails', '~> 7.1.3'
@@ -28,15 +31,22 @@ group :development, :test do
 end
 
 group :development do
+  gem 'letter_opener'
   gem 'web-console'
 end
 
 group :test do
   gem 'capybara'
+  gem 'capybara-email'
+  gem 'database_cleaner-active_record', '~> 2.0'
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers'
+  gem 'webdrivers', '~> 5.3'
 end
 
 gem 'shakapacker', '~> 8.1'
+
+# gem "gem", "~> 0.0.1.alpha"
+gem 'omniauth-rails_csrf_protection', '~> 1.0'

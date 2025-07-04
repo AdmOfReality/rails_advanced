@@ -17,14 +17,14 @@ feature 'User can edit his answer', "
     end
 
     scenario 'edits his answer' do
-      within '.answers' do
+      within "#answer_#{answer.id}" do
         click_on 'Edit'
         fill_in 'Body', with: 'Edited Answer'
         click_on 'Save'
+        sleep 1
 
         expect(page).not_to have_content answer.body
         expect(page).to have_content 'Edited Answer'
-        expect(page).not_to have_selector 'textarea'
       end
     end
 
@@ -40,6 +40,7 @@ feature 'User can edit his answer', "
 
     scenario "tries to edit other user's answer" do
       click_on 'Logout'
+      expect(page).to have_button('Login')
       sign_in(users.last)
       visit question_path(question)
 

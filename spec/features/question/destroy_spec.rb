@@ -36,8 +36,15 @@ feature 'User can delete own question', "
       end
 
       expect do
-        ActiveStorage::Attachment.find(attachment.id)
-      end.to raise_error(ActiveRecord::RecordNotFound)
+        Timeout.timeout(2) do
+          loop do
+            ActiveStorage::Attachment.find(attachment.id)
+            sleep 0.1
+          rescue ActiveRecord::RecordNotFound
+            break
+          end
+        end
+      end.not_to raise_error
     end
 
     scenario 'non-author delete attached files' do

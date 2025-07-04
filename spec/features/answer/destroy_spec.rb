@@ -42,6 +42,7 @@ feature 'User can delete own answer', "
 
     scenario 'non-author delete attached files' do
       click_on 'Logout'
+      expect(page).to have_button('Login')
       other_user = create(:user)
       sign_in(other_user)
       visit question_path(question)

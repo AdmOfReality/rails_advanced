@@ -5,7 +5,8 @@ FactoryBot.define do
 
   factory :user do
     email
-    password { '12345678' }
-    password_confirmation { '12345678' }
+    password { 'LUCKYsilence^7' }
+    password_confirmation { 'LUCKYsilence^7' }
+    confirmed_at { Time.zone.now }
   end
 end

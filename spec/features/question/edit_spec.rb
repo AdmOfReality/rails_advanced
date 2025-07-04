@@ -42,6 +42,7 @@ feature 'User can edit his question', "
 
     scenario "tries to edit other user's question" do
       click_on 'Logout'
+      expect(page).to have_button('Login')
       sign_in(users.last)
 
       visit question_path(question)
