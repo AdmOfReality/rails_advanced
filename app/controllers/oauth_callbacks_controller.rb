@@ -7,9 +7,7 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
     oauth_callback('Facebook')
   end
 
-  # def vk
-  #   oauth_callback('VK')
-  # end
+  private
 
   def oauth_callback(service)
     auth = request.env['omniauth.auth']

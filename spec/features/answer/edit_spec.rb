@@ -25,8 +25,6 @@ feature 'User can edit his answer', "
 
         expect(page).not_to have_content answer.body
         expect(page).to have_content 'Edited Answer'
-        # save_and_open_page
-        # expect(page).not_to have_selector('textarea', wait: 3)
       end
     end
 

@@ -2,7 +2,7 @@ class OauthEmailsController < ApplicationController
   def new; end
 
   def create
-    email = params[:email]
+    email = email_param
     oauth_data = session['devise.oauth_data']
 
     unless email.present? && oauth_data
@@ -28,5 +28,11 @@ class OauthEmailsController < ApplicationController
     session['devise.user_email'] = email
 
     redirect_to new_user_session_path, notice: 'Письмо с подтверждением отправлено.'
+  end
+
+  private
+
+  def email_param
+    params.permit(:email)[:email]
   end
 end
