@@ -4,6 +4,7 @@ ruby '3.2.2'
 
 gem 'aws-sdk-s3', require: false
 gem 'bootsnap', require: false
+gem 'cancancan'
 gem 'cocoon'
 gem 'devise'
 gem 'jbuilder'

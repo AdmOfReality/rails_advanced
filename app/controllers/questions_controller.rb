@@ -2,6 +2,8 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :load_question, only: %i[show update destroy edit purge_attachment destroy_link]
 
+  authorize_resource
+
   def index
     @questions = Question.all
   end

@@ -75,7 +75,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'returns forbidden status' do
-        delete :destroy, params: { question_id: question, id: answer }
+        delete :destroy, params: { question_id: question, id: answer }, format: :js
         expect(response).to have_http_status(:forbidden)
       end
     end

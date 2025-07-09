@@ -3,6 +3,8 @@ class VotesController < ApplicationController
   before_action :find_votable
   before_action :ensure_not_author
 
+  skip_authorization_check
+
   def upvote
     process_vote(+1)
   end

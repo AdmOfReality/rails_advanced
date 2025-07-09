@@ -18,7 +18,7 @@ feature 'User can add links to question', "
       fill_in 'Body', with: 'Question text'
     end
 
-    scenario 'adds link when asks question', :js do
+    scenario 'adds link when asks question', js: true do
       click_link 'Add link'
       fill_in 'Link name', with: 'My gist'
       fill_in 'Url', with: gist_url
@@ -28,7 +28,7 @@ feature 'User can add links to question', "
       expect(page).to have_link 'My gist', href: gist_url
     end
 
-    scenario 'adds multiple links when creates question', :js do
+    scenario 'adds multiple links when creates question', js: true do
       click_link 'Add link'
       within all('.nested-fields')[0] do
         fill_in 'Link name', with: 'First link'

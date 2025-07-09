@@ -3,6 +3,8 @@ class AnswersController < ApplicationController
   before_action :find_question, only: %i[create]
   before_action :find_answer, only: %i[destroy update best purge_attachment destroy_link]
 
+  authorize_resource
+
   def create
     @answer = @question.answers.build(answer_params)
     @answer.author = current_user
