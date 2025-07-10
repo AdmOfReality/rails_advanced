@@ -3,6 +3,8 @@ class AnswersController < ApplicationController
   before_action :find_question, only: %i[create]
   before_action :find_answer, only: %i[destroy update best purge_attachment destroy_link]
 
+  authorize_resource
+
   def create
     @answer = @question.answers.build(answer_params)
     @answer.author = current_user
@@ -12,47 +14,25 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if current_user&.author_of?(@answer)
-      @answer.update(answer_params)
-    else
-      head :forbidden
-    end
+    @answer.update(answer_params)
   end
 
   def destroy
-    if current_user&.author_of?(@answer)
-      @answer.destroy
-    else
-      head :forbidden
-    end
+    @answer.destroy
   end
 
   def destroy_link
     @link = @answer.links.find(params[:link_id])
-
-    if current_user&.author_of?(@answer)
-      @link.destroy
-    else
-      head :forbidden
-    end
+    @link.destroy
   end
 
   def best
-    if current_user&.author_of?(@answer.question)
-      @answer.mark_best_answer!
-    else
-      head :forbidden
-    end
+    @answer.mark_best_answer!
   end
 
   def purge_attachment
     @attachment = ActiveStorage::Attachment.find(params[:attachment_id])
-
-    if current_user&.author_of?(@answer)
-      @attachment.purge
-    else
-      head :forbidden
-    end
+    @attachment.purge
   end
 
   private

@@ -15,17 +15,16 @@
         - answer.files.each do |file|
           div id="attachment_#{file.id}"
             p= link_to file.filename.to_s, url_for(file)
-            - if current_user&.author_of?(answer)
+            - if can?(:purge_attachment, answer)
               p= link_to 'Delete attach',
-              purge_attachment_answer_path(answer, attachment_id: file.id),
-              method: :delete, remote: true, data: { confirm: 'Are you sure?' }
-
+                purge_attachment_answer_path(answer, attachment_id: file.id),
+                method: :delete, remote: true, data: { confirm: 'Are you sure?' }
 
     - if answer.best?
       br
       strong It is the best answer.
 
-    - if current_user&.author_of?(answer)
+    - if can?(:destroy, answer)
       p= link_to 'Delete answer', answer, method: :delete, remote: true, data: { confirm: 'Are you sure?' }
       p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
       = render 'answers/update_form', answer: answer
@@ -41,14 +40,14 @@
                 - if link.gist?
                   .gist-container data-gist-url=link.url
 
-              - if current_user&.author_of?(answer)
+              - if can?(:destroy_link, answer)
                 = link_to 'Delete', destroy_link_answer_path(answer, link_id: link.id),
                           method: :delete,
                           remote: true,
                           data: { confirm: 'Are you sure?' },
                           class: 'delete-link'
 
-    - if current_user&.author_of?(answer.question) && user_signed_in?
+    - if can?(:best, answer)
       .best_answer
         - unless answer.best?
           p= link_to 'Best answer', best_answer_path(answer), method: :patch, remote: true

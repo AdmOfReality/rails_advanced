@@ -2,6 +2,8 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :load_question, only: %i[show update destroy edit purge_attachment destroy_link]
 
+  authorize_resource
+
   def index
     @questions = Question.all
   end
@@ -35,32 +37,18 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user&.author_of?(@question)
-      @question.destroy
-      redirect_to questions_path, notice: 'Your question was successfully deleted.'
-    else
-      redirect_to @question, alert: "You can't change someone else's question."
-    end
+    @question.destroy
+    redirect_to questions_path, notice: 'Your question was successfully deleted.'
   end
 
   def destroy_link
     @link = @question.links.find(params[:link_id])
-
-    if current_user&.author_of?(@question)
-      @link.destroy
-    else
-      head :forbidden
-    end
+    @link.destroy
   end
 
   def purge_attachment
     @attachment = ActiveStorage::Attachment.find(params[:attachment_id])
-
-    if current_user&.author_of?(@question)
-      @attachment.purge
-    else
-      head :forbidden
-    end
+    @attachment.purge
   end
 
   private

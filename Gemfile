@@ -4,6 +4,7 @@ ruby '3.2.2'
 
 gem 'aws-sdk-s3', require: false
 gem 'bootsnap', require: false
+gem 'cancancan'
 gem 'cocoon'
 gem 'devise'
 gem 'jbuilder'
@@ -12,6 +13,7 @@ gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
+gem 'pundit'
 gem 'rails', '~> 7.1.3'
 gem 'slim-rails'
 gem 'sprockets-rails'
