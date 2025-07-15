@@ -7,6 +7,7 @@ gem 'bootsnap', require: false
 gem 'cancancan'
 gem 'cocoon'
 gem 'devise'
+gem 'doorkeeper'
 gem 'jbuilder'
 gem 'omniauth'
 gem 'omniauth-facebook'
