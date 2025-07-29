@@ -17,5 +17,16 @@ FactoryBot.define do
         ]
       end
     end
+
+    trait :with_file do
+      files do
+        [
+          Rack::Test::UploadedFile.new(
+            Rails.root.join('spec/fixtures/files/example.txt'),
+            'text/plain'
+          )
+        ]
+      end
+    end
   end
 end

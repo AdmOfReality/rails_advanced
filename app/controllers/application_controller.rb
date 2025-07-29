@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-
   skip_authorization_check if: :skip_cancan_authorization?
   check_authorization unless: :skip_cancan_authorization?
 
@@ -14,10 +13,6 @@ class ApplicationController < ActionController::Base
   private
 
   def skip_cancan_authorization?
-    devise_controller? || api_request?
-  end
-
-  def api_request?
-    request.path.start_with?('/api/')
+    devise_controller?
   end
 end
