@@ -13,7 +13,7 @@ describe 'Answers API for Question', type: :request do
 
     it_behaves_like 'API Authorizable'
 
-    context 'authorized' do
+    context 'when authorized' do
       before do
         get api_path,
             params: { access_token: access_token.token },
@@ -48,7 +48,7 @@ describe 'Answers API for Question', type: :request do
 
     it_behaves_like 'API Authorizable'
 
-    context 'authorized' do
+    context 'when authorized' do
       before do
         get api_path,
             params: { access_token: access_token.token },
@@ -104,7 +104,7 @@ describe 'Answers API for Question', type: :request do
 
     it_behaves_like 'API Authorizable'
 
-    context 'authorized' do
+    context 'when authorized' do
       let(:access_token) { create(:access_token, resource_owner_id: user.id) }
 
       before do
@@ -127,7 +127,7 @@ describe 'Answers API for Question', type: :request do
         let(:resource)          { question.answers.last }
       end
 
-      context 'invalid params' do
+      context 'with invalid params' do
         before do
           post api_path,
                params: invalid_params.merge(access_token: access_token.token),
@@ -152,7 +152,7 @@ describe 'Answers API for Question', type: :request do
 
     it_behaves_like 'API Authorizable'
 
-    context 'authorized' do
+    context 'when authorized' do
       before do
         patch api_path,
               params: valid_params.merge(access_token: access_token.token),
@@ -173,7 +173,7 @@ describe 'Answers API for Question', type: :request do
         let(:resource)          { answer }
       end
 
-      context 'invalid params' do
+      context 'with invalid params' do
         before do
           patch api_path,
                 params: invalid_params.merge(access_token: access_token.token),
@@ -196,7 +196,7 @@ describe 'Answers API for Question', type: :request do
 
     it_behaves_like 'API Authorizable'
 
-    context 'authorized' do
+    context 'when authorized' do
       it 'deletes answer (200) and returns deleted JSON' do
         expect do
           delete api_path,

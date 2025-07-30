@@ -10,7 +10,7 @@ describe 'Questions API', type: :request do
       let(:method) { :get }
     end
 
-    context 'authorized!' do
+    context 'when authorized!' do
       let(:user) { create(:user) }
       let(:access_token) { create(:access_token) }
       let!(:questions) { create_list(:question, 2) }
@@ -71,7 +71,7 @@ describe 'Questions API', type: :request do
       let(:method) { :get }
     end
 
-    context 'authorized' do
+    context 'when authorized' do
       before do
         get api_path, params: { access_token: access_token.token }, headers: headers
       end
@@ -123,7 +123,7 @@ describe 'Questions API', type: :request do
 
     it_behaves_like 'API Authorizable'
 
-    context 'authorized' do
+    context 'when authorized' do
       let(:access_token) { create(:access_token) }
 
       before do
@@ -146,7 +146,7 @@ describe 'Questions API', type: :request do
         let(:resource)          { Question.last }
       end
 
-      context 'invalid params' do
+      context 'with invalid params' do
         before do
           post api_path,
                params: invalid_params.merge(access_token: access_token.token),
@@ -171,7 +171,7 @@ describe 'Questions API', type: :request do
 
     it_behaves_like 'API Authorizable'
 
-    context 'authorized' do
+    context 'when authorized' do
       let(:access_token) { create(:access_token, resource_owner_id: user.id) }
 
       before do
@@ -196,7 +196,7 @@ describe 'Questions API', type: :request do
         let(:resource)          { question }
       end
 
-      context 'invalid params' do
+      context 'with invalid params' do
         before do
           patch api_path,
                 params: { question: { title: nil } }
@@ -221,7 +221,7 @@ describe 'Questions API', type: :request do
 
     it_behaves_like 'API Authorizable'
 
-    context 'authorized' do
+    context 'when authorized' do
       let(:access_token) { create(:access_token, resource_owner_id: user.id) }
 
       it 'deletes question (200) and returns deleted JSON' do
