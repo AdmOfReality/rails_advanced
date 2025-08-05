@@ -5,6 +5,8 @@ module FeatureHelpers
     fill_in 'Password', with: user.password
     click_on 'Log in'
 
+    expect(page).to have_current_path(root_path, ignore_query: true)
+
     expect(page).to have_content 'Signed in successfully'
   end
 

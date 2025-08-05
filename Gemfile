@@ -2,12 +2,15 @@ source 'https://rubygems.org'
 
 ruby '3.2.2'
 
+gem 'active_model_serializers'
 gem 'aws-sdk-s3', require: false
 gem 'bootsnap', require: false
 gem 'cancancan'
 gem 'cocoon'
 gem 'devise'
+gem 'doorkeeper'
 gem 'jbuilder'
+gem 'oj'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-github'

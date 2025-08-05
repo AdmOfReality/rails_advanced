@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
-  # include Pundit
+  skip_authorization_check if: :skip_cancan_authorization?
+  check_authorization unless: :skip_cancan_authorization?
 
   rescue_from CanCan::AccessDenied do |exception|
     respond_to do |format|
@@ -9,5 +10,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  check_authorization unless: :devise_controller?
+  private
+
+  def skip_cancan_authorization?
+    devise_controller?
+  end
 end

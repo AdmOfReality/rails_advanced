@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  use_doorkeeper
   resources :rewards, only: [:index]
 
   root to: 'questions#index'
@@ -32,6 +33,18 @@ Rails.application.routes.draw do
       post 'upvote'
       post 'downvote'
       delete 'cancel'
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: [:index] do
+        get :me, on: :collection
+      end
+
+      resources :questions, only: %i[index show create update destroy] do
+        resources :answers, only: %i[index show create update destroy], shallow: true
+      end
     end
   end
 
