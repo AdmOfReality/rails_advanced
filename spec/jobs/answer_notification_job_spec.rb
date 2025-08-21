@@ -5,7 +5,7 @@ RSpec.describe AnswerNotificationJob, type: :job do
   let(:question) { create(:question, author: users.first) }
   let(:answer)   { create(:answer, question: question, author: users.last) }
 
-  let(:service) { instance_double(AnswerNotificationService) }
+  let(:service) { double(AnswerNotificationService) }
 
   before do
     allow(AnswerNotificationService).to receive(:new).and_return(service)
@@ -17,8 +17,8 @@ RSpec.describe AnswerNotificationJob, type: :job do
   end
 
   it 'enqueues on the default queue with the answer' do
-    expect {
+    expect do
       described_class.perform_later(answer)
-    }.to have_enqueued_job(described_class).with(answer).on_queue('default')
+    end.to have_enqueued_job(described_class).with(answer).on_queue('default')
   end
 end

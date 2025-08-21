@@ -7,7 +7,6 @@ require 'cancan/matchers'
 
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 
-
 Rails.root.glob('spec/support/**/*.rb').sort_by(&:to_s).each { |f| require f }
 
 begin

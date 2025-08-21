@@ -8,4 +8,3 @@ RSpec.describe ReputationJob, type: :job do
     ReputationJob.perform_now(question)
   end
 end
-

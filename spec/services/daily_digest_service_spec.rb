@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe DailyDigestService do
   let(:users) { create_list(:user, 3) }
