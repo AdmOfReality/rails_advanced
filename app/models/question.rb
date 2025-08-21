@@ -13,4 +13,12 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :reward, reject_if: :all_blank
 
   validates :title, :body, presence: true
+
+  after_commit :enqueue_reputation_job, on: :create
+
+  private
+
+  def enqueue_reputation_job
+    ReputationJob.perform_later(self)
+  end
 end

@@ -12,6 +12,8 @@ class Answer < ApplicationRecord
 
   accepts_nested_attributes_for :links, allow_destroy: true, reject_if: :all_blank
 
+  after_create_commit :enqueue_notification_job
+
   def mark_best_answer!
     transaction do
       Answer.where(question_id: question_id).update_all(best: false)
@@ -19,5 +21,11 @@ class Answer < ApplicationRecord
 
       question.reward.update!(user: author) if question.reward.present?
     end
+  end
+
+  private
+
+  def enqueue_notification_job
+    AnswerNotificationJob.perform_later(self)
   end
 end

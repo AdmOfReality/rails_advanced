@@ -19,10 +19,13 @@ gem 'puma', '>= 5.0'
 gem 'pundit'
 gem 'rails', '~> 7.1.3'
 gem 'slim-rails'
+gem 'sidekiq'
+gem 'sinatra', require: false
 gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
+gem 'whenever', require: false
 
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]
