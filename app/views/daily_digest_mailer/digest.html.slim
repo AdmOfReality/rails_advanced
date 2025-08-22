@@ -1,0 +1,13 @@
+h2
+  | Daily Digest
+h4
+  | All the new questions asked today on Rails
+| ==============================
+
+- @questions.each do |question|
+  h4
+    = question.title
+  h5
+    = question.body
+  | --------------
+  br

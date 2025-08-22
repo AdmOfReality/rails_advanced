@@ -1,4 +1,10 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  authenticate :user, ->(u) { u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   use_doorkeeper
   resources :rewards, only: [:index]
 
@@ -16,6 +22,10 @@ Rails.application.routes.draw do
     member do
       delete :purge_attachment
       delete 'question_links/:link_id', to: 'questions#destroy_link', as: :destroy_link
+    end
+    member do
+      post   :subscribe
+      delete :unsubscribe
     end
 
     resources :answers, shallow: true, only: %i[create destroy update] do

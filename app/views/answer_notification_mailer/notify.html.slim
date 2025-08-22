@@ -1,0 +1,17 @@
+h2 New answer to your question
+
+p
+  | You have a new answer to your question "
+  strong= @question.title
+  | ".
+
+p
+  | Answer:
+  br
+  = simple_format(@answer.body)
+
+p
+  = link_to 'View the question', question_url(@question)
+
+hr
+small This notification was sent automatically.

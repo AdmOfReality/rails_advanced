@@ -66,4 +66,6 @@ Rails.application.configure do
   Rails.application.routes.default_url_options = { host: 'localhost', port: 3030 }
 
   OmniAuth.config.test_mode = true
+
+  config.active_job.queue_adapter = :test
 end
