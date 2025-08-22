@@ -6,7 +6,7 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question, author: author) }
 
   describe 'POST #subscribe' do
-    before { login(user) } # ← используем твой хелпер
+    before { login(user) }
 
     it 'creates a subscription and renders subscribe template' do
       expect do
