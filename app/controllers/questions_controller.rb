@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :load_question, only: %i[show update destroy edit purge_attachment destroy_link]
+  before_action :find_subscription, only: %i[show update]
 
   authorize_resource
 
@@ -75,5 +76,12 @@ class QuestionsController < ApplicationController
                                    partial: 'questions/question_public',
                                    locals: { question: @question }
                                  )
+  end
+
+  def find_subscription
+    return unless current_user
+
+    @subscription = current_user.subscriptions
+                                .find_by(question_id: @question)
   end
 end

@@ -1,12 +1,9 @@
 class AnswerNotificationService
   def send_notify(answer)
-    return unless answer
+    users = User.joins(:subscriptions).where(subscriptions: { question_id: answer.question })
 
-    question = answer.question
-    q_author = question&.author
-
-    # return if answer.author_id == q_author.id
-
-    AnswerNotificationMailer.notify(q_author, answer).deliver_later
+    users.find_each do |user|
+      AnswerNotificationMailer.notify(user, answer).deliver_later
+    end
   end
 end

@@ -4,6 +4,9 @@ p= question.body
 .votes
   = render partial: 'shared/vote_controls', locals: { votable: question }
 
+- if user_signed_in?
+    = render partial: 'subscriptions/subscription', locals: { resource: @question }
+
 .question_attach
   - if question.files.attached?
     - question.files.each do |file|

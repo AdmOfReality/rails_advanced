@@ -42,6 +42,10 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :user do
+    resources :subscriptions, only: %i[create destroy]
+  end
+
   namespace :api do
     namespace :v1 do
       resources :profiles, only: [:index] do

@@ -5,7 +5,7 @@ class AnswerNotificationMailer < ApplicationMailer
     @question = answer.question
 
     mail(
-      to: @question.author.email,
+      to: @user.email,
       subject: "Notify: Your have new answer from #{@question.title}"
     )
   end
