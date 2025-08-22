@@ -5,8 +5,8 @@ feature 'User can subscribe to question', "
   I'd like to be able to subscribe the question
   Receive email notifications of new answers
 " do
-  given(:author) { create :user }
-  given(:user) { create :user }
+  given(:author)   { create :user }
+  given(:user)     { create :user }
   given!(:question) { create :question, author: author }
 
   describe 'Authenticated author of question', js: true do
@@ -15,13 +15,15 @@ feature 'User can subscribe to question', "
       visit question_path(question)
     end
 
-    scenario 'subscribed to new answers' do
+    scenario 'subscribes to new answers' do
+      expect(page).to have_link 'Subscribe'
+      click_on 'Subscribe'
       expect(page).to have_link 'Unsubscribe'
     end
 
-    scenario 'unsubscribed from new answers' do
+    scenario 'unsubscribes from new answers' do
+      click_on 'Subscribe'
       click_on 'Unsubscribe'
-
       expect(page).to have_link 'Subscribe'
     end
   end
@@ -32,23 +34,21 @@ feature 'User can subscribe to question', "
       visit question_path(question)
     end
 
-    scenario 'subscribed to new answers' do
+    scenario 'subscribes to new answers' do
       click_on 'Subscribe'
       expect(page).to have_link 'Unsubscribe'
     end
 
-    scenario 'unsubscribed from new answers' do
+    scenario 'unsubscribes from new answers' do
       click_on 'Subscribe'
       click_on 'Unsubscribe'
-
       expect(page).to have_link 'Subscribe'
     end
   end
 
   describe 'Guest' do
-    scenario 'can\'t subscribe' do
+    scenario "can't subscribe" do
       visit question_path(question)
-
       expect(page).not_to have_link 'Subscribe'
       expect(page).not_to have_link 'Unsubscribe'
     end

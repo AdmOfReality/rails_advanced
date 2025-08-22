@@ -31,5 +31,7 @@ class Ability
     can :purge_attachment, [Question, Answer], author: user
     can :destroy_link, [Question, Answer], author: user
     can :best, Answer, question: { author_id: user.id }
+    can :subscribe,   Question
+    can :unsubscribe, Question
   end
 end

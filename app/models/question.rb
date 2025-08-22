@@ -18,15 +18,24 @@ class Question < ApplicationRecord
   validates :title, :body, presence: true
 
   after_commit :enqueue_reputation_job, on: :create
-  after_create_commit :subscribe_user!
+
+  def subscribed_of?(user)
+    return false unless user
+
+    user.subscriptions.exists?(question_id: id)
+  end
+
+  def subscribe!(user)
+    user.subscriptions.find_or_create_by!(question: self)
+  end
+
+  def unsubscribe!(user)
+    user.subscriptions.where(question: self).destroy_all
+  end
 
   private
 
   def enqueue_reputation_job
     ReputationJob.perform_later(self)
-  end
-
-  def subscribe_user!
-    author.subscribe!(self)
   end
 end

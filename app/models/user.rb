@@ -22,16 +22,4 @@ class User < ApplicationRecord
   def create_authorization(auth)
     authorizations.create(provider: auth.provider, uid: auth.uid)
   end
-
-  def subscribed_of?(resource)
-    subscriptions.exists?(question_id: resource)
-  end
-
-  def subscribe!(resource)
-    subscriptions.create!(question_id: resource.id)
-  end
-
-  def unsubscribe!(resource)
-    subscriptions.destroy!(question_id: resource.id)
-  end
 end

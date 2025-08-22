@@ -23,6 +23,10 @@ Rails.application.routes.draw do
       delete :purge_attachment
       delete 'question_links/:link_id', to: 'questions#destroy_link', as: :destroy_link
     end
+    member do
+      post   :subscribe
+      delete :unsubscribe
+    end
 
     resources :answers, shallow: true, only: %i[create destroy update] do
       resources :comments, only: :create
@@ -40,10 +44,6 @@ Rails.application.routes.draw do
       post 'downvote'
       delete 'cancel'
     end
-  end
-
-  resource :user do
-    resources :subscriptions, only: %i[create destroy]
   end
 
   namespace :api do

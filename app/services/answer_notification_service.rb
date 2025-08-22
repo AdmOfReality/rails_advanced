@@ -1,8 +1,14 @@
 class AnswerNotificationService
   def send_notify(answer)
-    users = User.joins(:subscriptions).where(subscriptions: { question_id: answer.question })
+    question = answer.question
+    return unless question
 
-    users.find_each do |user|
+    recipients = question
+                 .subscribers
+                 .where.not(id: answer.author_id)
+                 .distinct
+
+    recipients.find_each(batch_size: 500) do |user|
       AnswerNotificationMailer.notify(user, answer).deliver_later
     end
   end
